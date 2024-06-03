@@ -15,7 +15,7 @@ import RxCocoa
 
 
 class DetailVC: UIViewController {
-
+    
     
     @IBOutlet weak var imageView: UIImageView!
     @IBOutlet weak var nameLabel: UILabel!
@@ -46,6 +46,10 @@ class DetailVC: UIViewController {
         navigationController?.navigationBar.standardAppearance = navigationBarAppearance
         navigationController?.navigationBar.compactAppearance = navigationBarAppearance
 
+        DispatchQueue.main.async {
+            self.cartVM.getItems()
+        }
+        
         
         counter.itemCartAmount
             .map { "\($0)" }
@@ -84,32 +88,50 @@ class DetailVC: UIViewController {
             UserDefaults.standard.setValue(counter.itemCartAmount.value, forKey: key)
         }
     }
+    
+    
+    
 
     @IBAction func decrementClicked(_ sender: Any) {
+        cartVM.getItems()
         
         guard counter.itemCartAmount.value > 0 else { return }
-        
+
         counter.decrement()
         saveCounterValue()
 
         // Sepet işlemleri
-        if let food = self.foodList, let user = Auth.auth().currentUser?.email {
+        if let food = self.foodList, let user = Auth.auth().currentUser?.email, let yemekFiyat = foodList?.yemek_fiyat {
             // Önce mevcut öğeyi sil
             self.cartVM.showCart(kullanici_adi: user) { [weak self] cartList in
-                self?.cartArray = cartList
-                if let existingItem = cartList.first(where: { $0.yemek_adi == food.yemek_adi }), let itemID = existingItem.sepet_yemek_id {
-                    self?.cartVM.removeFromCart(sepet_yemek_id: Int(itemID)!, kullanici_adi: user)
+                guard let self = self else { return }
+                self.cartArray = cartList
+                
+                // Eğer sepette öğe yoksa veya hata alınırsa
+                if cartList.isEmpty {
+                    print("Sepette öğe bulunamadı veya hata alındı.")
+                    return // Hiçbir işlem yapma
                 }
-
-                // Yeni miktar 0 ise sepetten tamamen kaldır, değilse yeni miktarla tekrar ekle
-                if self?.counter.itemCartAmount.value ?? 0 > 0 {
-                    self?.cartVM.addToCart(yemek_adi: food.yemek_adi!, yemek_resim_adi: food.yemek_resim_adi!, yemek_fiyat: Int(food.yemek_fiyat!)!, yemek_siparis_adet: (self?.counter.itemCartAmount.value ?? 0), kullanici_adi: user)
-                    print("detaydan sepete eklendi")
-                } else {
-                    print("Ürün sepetten tamamen kaldırıldı")
+                else{
+                    
+                    // Eğer sepette öğe varsa
+                    if let existingItem = cartList.first(where: { $0.yemek_adi == food.yemek_adi! }), let itemID = existingItem.sepet_yemek_id {
+                        self.cartVM.removeFromCart(sepet_yemek_id: Int(itemID)!, kullanici_adi: user)
+                        
+                        // Yeni miktar 0 ise sepetten tamamen kaldır, değilse yeni miktarla tekrar ekle
+                        if self.counter.itemCartAmount.value > 0 {
+                            self.cartVM.addToCart(yemek_adi: food.yemek_adi!, yemek_resim_adi: food.yemek_resim_adi!, yemek_fiyat: Int(yemekFiyat)!, yemek_siparis_adet: self.counter.itemCartAmount.value, kullanici_adi: user)
+                            
+                    
+                            self.cartVC?.tableView.reloadData()
+                            print("Detaydan sepete eklendi")
+                        } else {
+                            print("Ürün sepetten tamamen kaldırıldı")
+                        }
+                    }
                 }
-
-                self?.cartVC?.tableView.reloadData()
+               
+               
             }
         }
 
@@ -121,28 +143,41 @@ class DetailVC: UIViewController {
     
     @IBAction func incrementClicked(_ sender: Any) {
         
-        
+        cartVM.getItems()
         
         counter.increment()
         saveCounterValue()
-        
-        if let user = Auth.auth().currentUser?.email, let food = foodList {
-            // Önce mevcut öğeyi kontrol et ve sil
-            self.cartVM.showCart(kullanici_adi: user) { [weak self] cartList in
-                self?.cartArray = cartList
-                if let existingItem = cartList.first(where: { $0.yemek_adi == food.yemek_adi }), let itemID = existingItem.sepet_yemek_id {
-                    self?.cartVM.removeFromCart(sepet_yemek_id: Int(itemID)!, kullanici_adi: user)
+
+        if let food = self.foodList,
+           let user = Auth.auth().currentUser?.email,
+           let yemekFiyat = foodList?.yemek_fiyat {
+            
+            // Öncelikle ürünü sepete ekle
+            self.cartVM.addToCart(yemek_adi: "\(food.yemek_adi!)", yemek_resim_adi: "\(food.yemek_resim_adi!)", yemek_fiyat: Int(yemekFiyat)!, yemek_siparis_adet: Int(self.counter.itemCartAmount.value), kullanici_adi: "\(user)")
+            print("detaydan sepete eklendi")
+            self.cartVC?.tableView.reloadData()
+                
+                // Ürünü ekledikten sonra güncel sepeti al
+                self.cartVM.showCart(kullanici_adi: user) { cartList in
+                    self.cartArray = cartList
+                    
+                    // Aynı isimde başka ürün var mı kontrol et
+                    if let existingItem = cartList.first(where: { $0.yemek_adi == food.yemek_adi! }) {
+                        if let itemID = existingItem.sepet_yemek_id {
+                            print("Aynı isimdeki ürün siliniyor: \(itemID)")
+                            self.cartVM.removeFromCart(sepet_yemek_id: Int(itemID)!, kullanici_adi: user)
+                            
+                            self.cartVC?.tableView.reloadData()
+                        }
+                    }
+                    
                 }
-                // Yeni miktarla tekrar ekle
-                self?.cartVM.addToCart(yemek_adi: food.yemek_adi!, yemek_resim_adi: food.yemek_resim_adi!, yemek_fiyat: Int(food.yemek_fiyat!)!, yemek_siparis_adet: (self?.counter.itemCartAmount.value ?? 0), kullanici_adi: user)
-                print("detaydan sepete eklendi")
-                self?.cartVC?.tableView.reloadData()
             }
-        }
-        
-        
     }
+   
     
+    
+
     
     @IBAction func addToFavClicked(_ sender: Any) {
     }

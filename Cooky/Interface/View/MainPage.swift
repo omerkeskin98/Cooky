@@ -20,6 +20,7 @@ class MainPage: UIViewController, UICollectionViewDelegate, UICollectionViewData
     var mainPageVM = MainPageVM()
     let disposeBag = DisposeBag()
     var counters: [Counter] = []
+    let cartVC = CartVC()
     
     @IBOutlet weak var collectionView: UICollectionView!
     
@@ -29,6 +30,7 @@ class MainPage: UIViewController, UICollectionViewDelegate, UICollectionViewData
 
         
         self.mainPageVM.getItems()
+        
         
         // navigation bar attributes
         self.navigationItem.title = "Cooky"
@@ -81,6 +83,7 @@ class MainPage: UIViewController, UICollectionViewDelegate, UICollectionViewData
         
         mainPageVM.firestoreUserInfo() // firebase user subscription
 
+      
     }
     
 

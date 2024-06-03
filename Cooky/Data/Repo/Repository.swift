@@ -10,7 +10,7 @@ import RxSwift
 import Kingfisher
 import Alamofire
 import Firebase
-
+import FirebaseFirestore
 
 class Repository{
     
@@ -19,11 +19,39 @@ class Repository{
     let firestoreDB = Firestore.firestore()
     
     
+    
 
+    func addToCart(yemek_adi: String, yemek_resim_adi: String, yemek_fiyat: Int, yemek_siparis_adet: Int, kullanici_adi: String) {
+        let url = URL(string: "http://kasimadalan.pe.hu/yemekler/sepeteYemekEkle.php")!
+        let params: Parameters = ["yemek_adi": yemek_adi, "yemek_resim_adi": yemek_resim_adi, "yemek_fiyat": yemek_fiyat, "yemek_siparis_adet": yemek_siparis_adet, "kullanici_adi": kullanici_adi]
+        
+        AF.request(url, method: .post, parameters: params, encoding: URLEncoding.default).response { response in
+            debugPrint(response) // API yanıtını hata ayıklama konsoluna yazdırır
+            
+            if let data = response.data {
+                do {
+                    let decodedResponse = try JSONDecoder().decode(CRUDResponse.self, from: data)
+                  //  print("Decoded response: \(decodedResponse)")
+                    // Yanıtın başarı durumunu ve mesajını işleyin
+                } catch {
+                    print("JSON decoding error: \(error)")
+                    // JSON decoding hatasını işleyin
+                }
+            } else {
+                if let error = response.error {
+                    print("Request error: \(error.localizedDescription)")
+                    // İstek hatasını işleyin
+                } else {
+                    print("Unknown error")
+                    // Bilinmeyen hatayı işleyin
+                }
+            }
+        }
+    }
 
     
     
-    func addToCart(yemek_adi: String, yemek_resim_adi: String, yemek_fiyat: Int, yemek_siparis_adet: Int, kullanici_adi: String){
+   /*/ func addToCart(yemek_adi: String, yemek_resim_adi: String, yemek_fiyat: Int, yemek_siparis_adet: Int, kullanici_adi: String){
  
         let url = URL(string: "http://kasimadalan.pe.hu/yemekler/sepeteYemekEkle.php")!
         let params : Parameters = [            "yemek_adi": yemek_adi,
@@ -48,7 +76,7 @@ class Repository{
             
         }
     }
-    
+    */
     
     func showCart(kullanici_adi: String, completion: @escaping ([SepetYemekler]) -> Void) {
         guard let url = URL(string: "http://kasimadalan.pe.hu/yemekler/sepettekiYemekleriGetir.php") else {
@@ -129,24 +157,7 @@ class Repository{
     
     func searchItems(searchWord: String){
         
- /*       let url = URL(string: "http://kasimadalan.pe.hu/kisiler/tum_kisiler_arama.php")!
-        let params : Parameters = ["kisi_ad":aramaKelimesi]
-        AF.request(url, method: .post, parameters: params).response { response in
-            if let data = response.data{
-                do{
-                    let cevap = try JSONDecoder().decode(KisilerCevap.self, from: data)
-                    if let liste = cevap.kisiler{
-                        self.kisilerListesi.onNext(liste)
-                    }
-                }catch{
-                    print(error.localizedDescription)
-                }
-                
-            
-            }
-            
-        }
-        */
+
     }
     
     func addToFavorites(){
@@ -168,9 +179,9 @@ class Repository{
             else{
                 if snapshot?.isEmpty == false && snapshot != nil{
                     for document in snapshot!.documents{
-                        if let userName = document.get("email") as? String{
+                        if document.get("email") is String{
                             UserSingleton.shareUserInfo.email = Auth.auth().currentUser!.email!
-                         //   UserSingleton.shareUserInfo.username = userName
+   
                             
                             
                         }

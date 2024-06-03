@@ -17,6 +17,9 @@ class CartVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
     var cartVM = CartVM()
     var disposeBag = DisposeBag()
     var mainPageVM = MainPageVM()
+    var detailVC = DetailVC()
+    var counter = Counter()
+    
 
     @IBOutlet weak var tableViewCell: CartTVCell!
     @IBOutlet weak var tableView: UITableView!
@@ -25,6 +28,7 @@ class CartVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         super.viewDidLoad()
         
         self.mainPageVM.getItems()
+     
 
         tableView.dataSource = self
         tableView.delegate = self
@@ -41,17 +45,9 @@ class CartVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         navigationController?.navigationBar.compactAppearance = navigationBarAppearance
         
             
-        if let user = Auth.auth().currentUser?.email {
-            self.cartVM.showCart(kullanici_adi: user) { [weak self] cartList in
- 
-                self?.cartList = cartList
-                self?.tableView.reloadData()
-            }
-        }
+
 
         
-        
-
         cartVM.itemList
             .subscribe(onNext: { [weak self] list in
                 guard let self = self else { return }
@@ -68,26 +64,26 @@ class CartVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     override func viewWillAppear(_ animated: Bool) {
         
-        DispatchQueue.main.async {
+            
             if let user = Auth.auth().currentUser?.email {
                 self.cartVM.showCart(kullanici_adi: user) { [weak self] cartList in
-     
                     self?.cartList = cartList
-                    self?.tableView.reloadData()
+                    
                 }
             }
-            self.tableView.reloadData()
-
-        }
-        
-
-        self.checkIfTableViewIsEmpty()
+            
+        self.tableView.reloadData()
     }
 
     
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return cartList.count
+        if cartList.isEmpty == true {
+            return 0
+        } else {
+            // Sepet dolu ise gerçek öğe sayısını döndürür
+            return cartList.count
+        }
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -129,7 +125,8 @@ class CartVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
                     self.cartVM.showCart(kullanici_adi: user) { [weak self] cartList in
 
                         self?.cartList = cartList
-
+                        
+                    
                         self?.tableView.reloadData()
                     
                     }
@@ -138,28 +135,12 @@ class CartVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
             alert.addAction(evetAction)
             
             self.present(alert, animated: true)
-            self.checkIfTableViewIsEmpty()
             
         }
         return UISwipeActionsConfiguration(actions: [deleteAction])
     }
-
     
-    func checkIfTableViewIsEmpty() {
-        if cartList.isEmpty {
-            let messageLabel = UILabel(frame: CGRect(x: 0, y: 0, width: tableView.bounds.size.width, height: tableView.bounds.size.height))
-            messageLabel.text = "Cart is empty"
-            messageLabel.textColor = .black
-            messageLabel.textAlignment = .center
-            messageLabel.font = UIFont.systemFont(ofSize: 20)
-            messageLabel.sizeToFit()
 
-            tableView.backgroundView = messageLabel
-            tableView.separatorStyle = .none
-        } else {
-            tableView.backgroundView = nil
-            tableView.separatorStyle = .singleLine
-        }
-    }
+
 
 }
