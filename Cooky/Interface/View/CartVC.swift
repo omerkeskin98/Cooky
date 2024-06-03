@@ -16,12 +16,15 @@ class CartVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
     var cartList = [SepetYemekler]()
     var cartVM = CartVM()
     var disposeBag = DisposeBag()
+    var mainPageVM = MainPageVM()
 
     @IBOutlet weak var tableViewCell: CartTVCell!
     @IBOutlet weak var tableView: UITableView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        self.mainPageVM.getItems()
 
         tableView.dataSource = self
         tableView.delegate = self
@@ -74,9 +77,11 @@ class CartVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
                 }
             }
             self.tableView.reloadData()
-            self.checkIfTableViewIsEmpty()
+
         }
-       
+        
+
+        self.checkIfTableViewIsEmpty()
     }
 
     
@@ -124,17 +129,16 @@ class CartVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
                     self.cartVM.showCart(kullanici_adi: user) { [weak self] cartList in
 
                         self?.cartList = cartList
-                        self!.checkIfTableViewIsEmpty()
+
                         self?.tableView.reloadData()
                     
                     }
                 }
-                
             }
             alert.addAction(evetAction)
             
             self.present(alert, animated: true)
-            
+            self.checkIfTableViewIsEmpty()
             
         }
         return UISwipeActionsConfiguration(actions: [deleteAction])

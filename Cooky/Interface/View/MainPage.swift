@@ -27,6 +27,9 @@ class MainPage: UIViewController, UICollectionViewDelegate, UICollectionViewData
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        
+        self.mainPageVM.getItems()
+        
         // navigation bar attributes
         self.navigationItem.title = "Cooky"
         
@@ -52,7 +55,8 @@ class MainPage: UIViewController, UICollectionViewDelegate, UICollectionViewData
         collectionView.collectionViewLayout = design
         
         
-        
+       
+
         
        _ = mainPageVM.itemList.subscribe(onNext: {list in
             self.foodList = list
@@ -67,13 +71,13 @@ class MainPage: UIViewController, UICollectionViewDelegate, UICollectionViewData
            }
             
             DispatchQueue.main.async{
-            
                 self.collectionView.reloadData()
             }
+           
         })
         
         
-        mainPageVM.getItems()
+
         
         mainPageVM.firestoreUserInfo() // firebase user subscription
 

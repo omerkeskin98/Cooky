@@ -20,7 +20,10 @@ class Repository{
     
     
 
-    func addToCart(yemek_adi: String, yemek_resim_adi: String, yemek_fiyat: String, yemek_siparis_adet: String, kullanici_adi: String){
+
+    
+    
+    func addToCart(yemek_adi: String, yemek_resim_adi: String, yemek_fiyat: Int, yemek_siparis_adet: Int, kullanici_adi: String){
  
         let url = URL(string: "http://kasimadalan.pe.hu/yemekler/sepeteYemekEkle.php")!
         let params : Parameters = [            "yemek_adi": yemek_adi,
@@ -83,7 +86,7 @@ class Repository{
     func removeFromCart(sepet_yemek_id : Int, kullanici_adi : String){
         
         let url = URL(string: "http://kasimadalan.pe.hu/yemekler/sepettenYemekSil.php")!
-        let params : Parameters = [            "sepet_yemek_id": sepet_yemek_id,
+        let params : [String: Any] = [         "sepet_yemek_id": sepet_yemek_id,
                                                "kullanici_adi": kullanici_adi]
         AF.request(url, method: .post, parameters: params, encoding: URLEncoding.default).response { response in
             if let data = response.data{
