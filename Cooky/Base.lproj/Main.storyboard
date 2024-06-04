@@ -299,7 +299,10 @@
                                 </prototypes>
                             </tableView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3X0-5V-9mq">
-                                <rect key="frame" x="10" y="797.5" width="394" height="39.5"/>
+                                <rect key="frame" x="10" y="777" width="394" height="60"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="60" id="tjk-ye-SIi"/>
+                                </constraints>
                                 <state key="normal" title="Button"/>
                                 <buttonConfiguration key="configuration" style="filled" title="Proceed to payment">
                                     <fontDescription key="titleFontDescription" type="system" weight="semibold" pointSize="21"/>
@@ -310,12 +313,12 @@
                         <viewLayoutGuide key="safeArea" id="NMA-bD-Ndi"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
-                            <constraint firstItem="NMA-bD-Ndi" firstAttribute="trailing" secondItem="3X0-5V-9mq" secondAttribute="trailing" constant="10" id="Cvk-sB-ykg"/>
-                            <constraint firstItem="3X0-5V-9mq" firstAttribute="leading" secondItem="yPY-B4-HIM" secondAttribute="leading" constant="10" id="HHz-Yp-kXU"/>
+                            <constraint firstItem="NMA-bD-Ndi" firstAttribute="bottom" secondItem="3X0-5V-9mq" secondAttribute="bottom" constant="10" id="7kX-MZ-oqa"/>
+                            <constraint firstItem="NMA-bD-Ndi" firstAttribute="trailing" secondItem="3X0-5V-9mq" secondAttribute="trailing" constant="10" id="OLg-dj-4Kr"/>
                             <constraint firstItem="HIE-PY-3YK" firstAttribute="top" secondItem="NMA-bD-Ndi" secondAttribute="top" id="UNU-eO-qOv"/>
-                            <constraint firstItem="NMA-bD-Ndi" firstAttribute="bottom" secondItem="3X0-5V-9mq" secondAttribute="bottom" constant="10" id="bXB-nG-ozO"/>
                             <constraint firstItem="HIE-PY-3YK" firstAttribute="leading" secondItem="NMA-bD-Ndi" secondAttribute="leading" id="bva-Yx-MsY"/>
                             <constraint firstItem="HIE-PY-3YK" firstAttribute="trailing" secondItem="NMA-bD-Ndi" secondAttribute="trailing" id="u53-BK-ley"/>
+                            <constraint firstItem="3X0-5V-9mq" firstAttribute="leading" secondItem="NMA-bD-Ndi" secondAttribute="leading" constant="10" id="zdp-AE-5vq"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Cart" id="Lv4-ew-twX"/>

@@ -18,7 +18,7 @@ class CartTVCell: UITableViewCell {
     @IBOutlet weak var cellAmountLabel: UILabel!
     @IBOutlet weak var cellSumLabel: UILabel!
     
-
+    var counter = Counter()
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -30,5 +30,6 @@ class CartTVCell: UITableViewCell {
 
         // Configure the view for the selected state
     }
+    
 
 }

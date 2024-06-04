@@ -14,6 +14,7 @@ class CartVC: UIViewController, UITableViewDelegate, UITableViewDataSource{
 
     
 
+    @IBOutlet weak var totalLabel: UILabel!
     
     var cartList = [SepetYemekler]()
     var cartVM = CartVM()
@@ -53,15 +54,11 @@ class CartVC: UIViewController, UITableViewDelegate, UITableViewDataSource{
             })
             .disposed(by: disposeBag)
         
-        
+     
         NotificationCenter.default.addObserver(self, selector: #selector(handleCartUpdateNotification), name: .cartUpdated, object: nil)
         
         loadCartData()
-    }
-    
-    
-    @objc func handleCartUpdateNotification(notification: Notification) {
-        loadCartData()
+        
     }
     
     
@@ -69,7 +66,15 @@ class CartVC: UIViewController, UITableViewDelegate, UITableViewDataSource{
         
         super.viewWillAppear(animated)
                 loadCartData()
+        
     }
+    
+    
+    @objc func handleCartUpdateNotification(notification: Notification) {
+        loadCartData()
+    }
+    
+ 
 
     
     func loadCartData() {
@@ -106,7 +111,6 @@ class CartVC: UIViewController, UITableViewDelegate, UITableViewDataSource{
         }
         cell.cellAmountLabel.text = "\(item.yemek_siparis_adet!) adet"
         cell.cellSumLabel.text = "\(Int(item.yemek_siparis_adet!)! * Int(item.yemek_fiyat!)!)₺"
-        
         return cell
         
     }

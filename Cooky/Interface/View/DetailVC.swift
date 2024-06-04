@@ -99,6 +99,7 @@ class DetailVC: UIViewController {
 
     @IBAction func decrementClicked(_ sender: Any) {
         
+    
         guard counter.itemCartAmount.value > 0 else { return }
         
 
@@ -128,17 +129,12 @@ class DetailVC: UIViewController {
                         if self.counter.itemCartAmount.value > 0 {
                             self.cartVM.addToCart(yemek_adi: food.yemek_adi!, yemek_resim_adi: food.yemek_resim_adi!, yemek_fiyat: Int(yemekFiyat)!, yemek_siparis_adet: self.counter.itemCartAmount.value, kullanici_adi: user)
                             
-                    
-                        
                             print("Detaydan sepete eklendi")
                         } else {
                             print("Ürün sepetten tamamen kaldırıldı")
                         }
-                        
-                        
                         NotificationCenter.default.post(name: .cartUpdated, object: nil)
                     }
-                 //   sumLabel.text = "\(counter.itemCartAmount.value * Int(yemekFiyat)!)₺"
                 }
             }
         }
@@ -149,8 +145,8 @@ class DetailVC: UIViewController {
     
     
     @IBAction func incrementClicked(_ sender: Any) {
-        
-        
+    
+    
         if let food = self.foodList,
            let user = Auth.auth().currentUser?.email,
            let yemekFiyat = foodList?.yemek_fiyat {
@@ -179,6 +175,7 @@ class DetailVC: UIViewController {
                     
                 }
             }
+         
     }
    
     
