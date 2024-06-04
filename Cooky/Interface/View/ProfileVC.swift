@@ -30,7 +30,7 @@ class ProfileVC: UIViewController {
         navigationController?.navigationBar.compactAppearance = navigationBarAppearance
         
         if let userName = Auth.auth().currentUser?.email{
-            userLabel.text = userName
+            userLabel.text = "E-mail: \(userName)"
         }
     }
     
