@@ -11,7 +11,6 @@ import RxSwift
 import Firebase
 import Alamofire
 import RxRelay
-import RxCocoa
 
 
 class DetailVC: UIViewController {
@@ -24,13 +23,12 @@ class DetailVC: UIViewController {
     @IBOutlet weak var sumLabel: UILabel!
     
     var foodList : Yemekler?
-    var cartList : SepetYemekler?
     var cartVM = CartVM()
     var cartVC : CartVC?
     var cartArray = [SepetYemekler]()
-    var mainPageVC = MainPage()
     var counter = Counter()
     let disposeBag = DisposeBag()
+
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -45,10 +43,6 @@ class DetailVC: UIViewController {
         navigationController?.navigationBar.scrollEdgeAppearance = navigationBarAppearance
         navigationController?.navigationBar.standardAppearance = navigationBarAppearance
         navigationController?.navigationBar.compactAppearance = navigationBarAppearance
-
-        DispatchQueue.main.async {
-            self.cartVM.getItems()
-        }
         
         
         counter.itemCartAmount
@@ -56,7 +50,10 @@ class DetailVC: UIViewController {
             .bind(to: amountLabel.rx.text)
             .disposed(by: disposeBag)
 
-        
+        counter.totalPrice
+            .map { "\($0)₺" }
+            .bind(to: sumLabel.rx.text)
+            .disposed(by: disposeBag)
      
         if let item = foodList{
             
@@ -75,17 +72,25 @@ class DetailVC: UIViewController {
         
         if let foodName = foodList?.yemek_adi {
             let key = "itemCartAmount_\(foodName)"
+            let totalPriceKey = "totalPrice_\(foodName)"
             if let savedAmount = UserDefaults.standard.value(forKey: key) as? Int {
                 counter.itemCartAmount.accept(savedAmount)
             }
+            if let savedTotalPrice = UserDefaults.standard.value(forKey: totalPriceKey) as? Int {
+                counter.totalPrice.accept(savedTotalPrice)
+            }
         }
     }
+    
+    
     
 
     private func saveCounterValue() {
         if let foodName = foodList?.yemek_adi {
             let key = "itemCartAmount_\(foodName)"
+            let totalPriceKey = "totalPrice_\(foodName)"
             UserDefaults.standard.setValue(counter.itemCartAmount.value, forKey: key)
+            UserDefaults.standard.setValue(counter.totalPrice.value, forKey: totalPriceKey)
         }
     }
     
@@ -93,28 +98,29 @@ class DetailVC: UIViewController {
     
 
     @IBAction func decrementClicked(_ sender: Any) {
-        cartVM.getItems()
         
         guard counter.itemCartAmount.value > 0 else { return }
-
-        counter.decrement()
-        saveCounterValue()
+        
 
         // Sepet işlemleri
         if let food = self.foodList, let user = Auth.auth().currentUser?.email, let yemekFiyat = foodList?.yemek_fiyat {
+            
+            counter.decrement(price: Int(yemekFiyat)!)
+            saveCounterValue()
+            
             // Önce mevcut öğeyi sil
             self.cartVM.showCart(kullanici_adi: user) { [weak self] cartList in
                 guard let self = self else { return }
                 self.cartArray = cartList
                 
-                // Eğer sepette öğe yoksa veya hata alınırsa
+                // sepeet boşsa
                 if cartList.isEmpty {
                     print("Sepette öğe bulunamadı veya hata alındı.")
                     return // Hiçbir işlem yapma
                 }
                 else{
                     
-                    // Eğer sepette öğe varsa
+                    // sepet doluysa
                     if let existingItem = cartList.first(where: { $0.yemek_adi == food.yemek_adi! }), let itemID = existingItem.sepet_yemek_id {
                         self.cartVM.removeFromCart(sepet_yemek_id: Int(itemID)!, kullanici_adi: user)
                         
@@ -123,18 +129,19 @@ class DetailVC: UIViewController {
                             self.cartVM.addToCart(yemek_adi: food.yemek_adi!, yemek_resim_adi: food.yemek_resim_adi!, yemek_fiyat: Int(yemekFiyat)!, yemek_siparis_adet: self.counter.itemCartAmount.value, kullanici_adi: user)
                             
                     
-                            self.cartVC?.tableView.reloadData()
+                        
                             print("Detaydan sepete eklendi")
                         } else {
                             print("Ürün sepetten tamamen kaldırıldı")
                         }
+                        
+                        
+                        NotificationCenter.default.post(name: .cartUpdated, object: nil)
                     }
+                 //   sumLabel.text = "\(counter.itemCartAmount.value * Int(yemekFiyat)!)₺"
                 }
-               
-               
             }
         }
-
     }
  
 
@@ -143,19 +150,17 @@ class DetailVC: UIViewController {
     
     @IBAction func incrementClicked(_ sender: Any) {
         
-        cartVM.getItems()
         
-        counter.increment()
-        saveCounterValue()
-
         if let food = self.foodList,
            let user = Auth.auth().currentUser?.email,
            let yemekFiyat = foodList?.yemek_fiyat {
             
+            counter.increment(price: Int(yemekFiyat)!)
+            saveCounterValue()
+            
             // Öncelikle ürünü sepete ekle
-            self.cartVM.addToCart(yemek_adi: "\(food.yemek_adi!)", yemek_resim_adi: "\(food.yemek_resim_adi!)", yemek_fiyat: Int(yemekFiyat)!, yemek_siparis_adet: Int(self.counter.itemCartAmount.value), kullanici_adi: "\(user)")
+            self.cartVM.addToCart(yemek_adi: "\(food.yemek_adi!)", yemek_resim_adi: "\(food.yemek_resim_adi!)", yemek_fiyat: Int(yemekFiyat)!, yemek_siparis_adet: Int(self.counter.itemCartAmount.value), kullanici_adi: user)
             print("detaydan sepete eklendi")
-            self.cartVC?.tableView.reloadData()
                 
                 // Ürünü ekledikten sonra güncel sepeti al
                 self.cartVM.showCart(kullanici_adi: user) { cartList in
@@ -164,11 +169,12 @@ class DetailVC: UIViewController {
                     // Aynı isimde başka ürün var mı kontrol et
                     if let existingItem = cartList.first(where: { $0.yemek_adi == food.yemek_adi! }) {
                         if let itemID = existingItem.sepet_yemek_id {
-                            print("Aynı isimdeki ürün siliniyor: \(itemID)")
+                            print("Aynı isimdeki ürün silindi: \(itemID)")
                             self.cartVM.removeFromCart(sepet_yemek_id: Int(itemID)!, kullanici_adi: user)
-                            
-                            self.cartVC?.tableView.reloadData()
+                        
                         }
+                     //   self.sumLabel.text = "\(self.counter.itemCartAmount.value * Int(yemekFiyat)!)₺"
+                        NotificationCenter.default.post(name: .cartUpdated, object: nil)
                     }
                     
                 }
@@ -176,15 +182,15 @@ class DetailVC: UIViewController {
     }
    
     
-    
 
-    
-    @IBAction func addToFavClicked(_ sender: Any) {
-    }
     
     func itemCartAmountKey(for indexPath: IndexPath) -> String {
         return "itemCartAmount_\(indexPath.section)_\(indexPath.row)"
     }
     
     
+}
+
+extension Notification.Name {
+    static let cartUpdate = Notification.Name("cartUpdate")
 }

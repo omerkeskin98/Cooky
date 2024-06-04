@@ -7,6 +7,7 @@
 
 import Foundation
 import RxSwift
+import UIKit
 
 class MainPageVM{
     
@@ -24,8 +25,8 @@ class MainPageVM{
         repo.getItems()
     }
 
-    func firestoreUserInfo(){
-        repo.getUserInfo()
+    func getUserInfo(vc: UIViewController){
+        repo.getUserInfo(vc: vc)
     }
     
 }

@@ -86,26 +86,8 @@
                                     <constraint firstAttribute="width" constant="200" id="cVw-jm-ZoW"/>
                                 </constraints>
                             </stackView>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dYL-sw-tcz">
-                                <rect key="frame" x="20" y="824" width="174.5" height="42"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="42" id="1eB-cT-kzu"/>
-                                </constraints>
-                                <state key="normal" title="Button"/>
-                                <buttonConfiguration key="configuration" style="filled" title="Add to favorites">
-                                    <fontDescription key="titleFontDescription" type="system" weight="medium" pointSize="21"/>
-                                    <color key="baseBackgroundColor" name="color1"/>
-                                </buttonConfiguration>
-                                <connections>
-                                    <action selector="addToFavClicked:" destination="aDN-Vx-QAT" eventType="touchUpInside" id="YiO-IR-ISh"/>
-                                </connections>
-                            </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="toplam_fiyat" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xZe-v2-SWH">
-                                <rect key="frame" x="194.5" y="824" width="199.5" height="42"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="42" id="KP7-LG-DwN"/>
-                                    <constraint firstAttribute="width" constant="199.5" id="TLD-Xz-5bR"/>
-                                </constraints>
+                                <rect key="frame" x="107.5" y="814" width="199.5" height="42"/>
                                 <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="35"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
@@ -114,19 +96,16 @@
                         <viewLayoutGuide key="safeArea" id="ovg-Zm-79X"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
+                            <constraint firstItem="xZe-v2-SWH" firstAttribute="centerX" secondItem="Aae-3d-5Eg" secondAttribute="centerX" id="8J3-rm-hHF"/>
                             <constraint firstItem="sUt-Sg-it0" firstAttribute="top" secondItem="GpP-rP-ybo" secondAttribute="bottom" constant="15" id="AGL-QR-c1G"/>
                             <constraint firstItem="odR-GF-Kfz" firstAttribute="top" secondItem="Qej-sV-wtD" secondAttribute="bottom" constant="20" id="Exr-NZ-vAx"/>
                             <constraint firstItem="sUt-Sg-it0" firstAttribute="centerX" secondItem="Aae-3d-5Eg" secondAttribute="centerX" id="RBh-q0-rg9"/>
-                            <constraint firstItem="ovg-Zm-79X" firstAttribute="bottom" secondItem="dYL-sw-tcz" secondAttribute="bottom" constant="20" id="UuJ-ru-bTU"/>
                             <constraint firstItem="Qej-sV-wtD" firstAttribute="centerX" secondItem="Aae-3d-5Eg" secondAttribute="centerX" id="Wm9-lj-hpO"/>
                             <constraint firstItem="Qej-sV-wtD" firstAttribute="top" secondItem="sUt-Sg-it0" secondAttribute="bottom" constant="15" id="bIU-GM-YgP"/>
-                            <constraint firstItem="ovg-Zm-79X" firstAttribute="trailing" secondItem="xZe-v2-SWH" secondAttribute="trailing" constant="20" id="bvg-Tj-OP8"/>
                             <constraint firstItem="GpP-rP-ybo" firstAttribute="top" secondItem="ovg-Zm-79X" secondAttribute="top" constant="20" id="eVi-lX-1W2"/>
                             <constraint firstItem="GpP-rP-ybo" firstAttribute="leading" secondItem="ovg-Zm-79X" secondAttribute="leading" constant="20" id="gJj-Ub-H0C"/>
-                            <constraint firstItem="xZe-v2-SWH" firstAttribute="leading" secondItem="dYL-sw-tcz" secondAttribute="trailing" id="grT-rL-Ras"/>
-                            <constraint firstItem="dYL-sw-tcz" firstAttribute="leading" secondItem="ovg-Zm-79X" secondAttribute="leading" constant="20" id="hDK-cA-ppQ"/>
                             <constraint firstItem="ovg-Zm-79X" firstAttribute="trailing" secondItem="GpP-rP-ybo" secondAttribute="trailing" constant="20" id="n66-ji-lAo"/>
-                            <constraint firstItem="ovg-Zm-79X" firstAttribute="bottom" secondItem="xZe-v2-SWH" secondAttribute="bottom" constant="20" id="sfX-C3-wL5"/>
+                            <constraint firstItem="ovg-Zm-79X" firstAttribute="bottom" secondItem="xZe-v2-SWH" secondAttribute="bottom" constant="30" id="ply-XX-4P8"/>
                             <constraint firstItem="odR-GF-Kfz" firstAttribute="centerX" secondItem="Aae-3d-5Eg" secondAttribute="centerX" id="t2d-k2-7IR"/>
                         </constraints>
                     </view>
@@ -141,7 +120,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="4rI-ZF-knz" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="8326.0869565217399" y="-754.01785714285711"/>
+            <point key="canvasLocation" x="8472" y="3"/>
         </scene>
         <!--Main Page-->
         <scene sceneID="tne-QT-ifu">
@@ -225,22 +204,6 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="6507.2463768115949" y="3.3482142857142856"/>
-        </scene>
-        <!--FavoritesVC-->
-        <scene sceneID="ifg-cl-g8T">
-            <objects>
-                <viewController id="0Le-Ze-C35" customClass="FavoritesVC" customModule="Cooky" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="Pea-LO-7jJ">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="847"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <viewLayoutGuide key="safeArea" id="QDp-UH-ih2"/>
-                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                    </view>
-                    <navigationItem key="navigationItem" id="yr4-BL-5PC"/>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="B4v-Jl-e0d" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="8382.608695652174" y="2.6785714285714284"/>
         </scene>
         <!--Cart-->
         <scene sceneID="MDW-Zz-xq2">
@@ -529,7 +492,6 @@
                     <connections>
                         <segue destination="FEX-MH-8LS" kind="relationship" relationship="viewControllers" id="T8Y-PN-Cqr"/>
                         <segue destination="mcT-kh-MWR" kind="relationship" relationship="viewControllers" id="WGi-K4-yi7"/>
-                        <segue destination="3bN-T3-hfS" kind="relationship" relationship="viewControllers" id="4HO-G6-Dub"/>
                         <segue destination="ZLV-Qb-NqF" kind="relationship" relationship="viewControllers" id="RmR-5a-mSN"/>
                     </connections>
                 </tabBarController>
@@ -599,27 +561,6 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="bmT-a4-5Rn" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="5597.1014492753629" y="3.3482142857142856"/>
-        </scene>
-        <!--Favorites-->
-        <scene sceneID="UOe-HL-DXE">
-            <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="3bN-T3-hfS" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Favorites" id="b0F-NT-gTk">
-                        <imageReference key="image" image="heart" catalog="system"/>
-                    </tabBarItem>
-                    <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="wjI-LU-gsq">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="44"/>
-                        <autoresizingMask key="autoresizingMask"/>
-                    </navigationBar>
-                    <nil name="viewControllers"/>
-                    <connections>
-                        <segue destination="0Le-Ze-C35" kind="relationship" relationship="rootViewController" id="VRd-tq-sBm"/>
-                    </connections>
-                </navigationController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="7vO-sh-ato" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="7472.4637681159429" y="2.6785714285714284"/>
         </scene>
         <!--Cart-->
         <scene sceneID="357-y1-vzD">
@@ -713,7 +654,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="uGf-Kl-N0s" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="7415.9420289855079" y="-754.01785714285711"/>
+            <point key="canvasLocation" x="7487" y="3"/>
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
@@ -723,7 +664,6 @@
     <resources>
         <image name="cart" catalog="system" width="128" height="102"/>
         <image name="fork.knife" catalog="system" width="94" height="128"/>
-        <image name="heart" catalog="system" width="128" height="107"/>
         <image name="person" catalog="system" width="128" height="121"/>
         <namedColor name="color1">
             <color red="0.54509803921568623" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>

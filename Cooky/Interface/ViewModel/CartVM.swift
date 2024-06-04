@@ -32,8 +32,5 @@ class CartVM{
         repo.removeFromCart(sepet_yemek_id: sepet_yemek_id, kullanici_adi: kullanici_adi)
     }
     
-    func getItems(){
-        repo.getItems()
-    }
 
 }

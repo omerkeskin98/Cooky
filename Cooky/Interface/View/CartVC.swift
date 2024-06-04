@@ -10,7 +10,9 @@ import Firebase
 import RxSwift
 import Kingfisher
 
-class CartVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class CartVC: UIViewController, UITableViewDelegate, UITableViewDataSource{
+
+    
 
     
     var cartList = [SepetYemekler]()
@@ -26,8 +28,6 @@ class CartVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        self.mainPageVM.getItems()
      
 
         tableView.dataSource = self
@@ -44,9 +44,6 @@ class CartVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         navigationController?.navigationBar.standardAppearance = navigationBarAppearance
         navigationController?.navigationBar.compactAppearance = navigationBarAppearance
         
-            
-
-
         
         cartVM.itemList
             .subscribe(onNext: { [weak self] list in
@@ -56,26 +53,36 @@ class CartVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
             })
             .disposed(by: disposeBag)
         
-    
-      
         
+        NotificationCenter.default.addObserver(self, selector: #selector(handleCartUpdateNotification), name: .cartUpdated, object: nil)
         
+        loadCartData()
     }
+    
+    
+    @objc func handleCartUpdateNotification(notification: Notification) {
+        loadCartData()
+    }
+    
     
     override func viewWillAppear(_ animated: Bool) {
         
-            
-            if let user = Auth.auth().currentUser?.email {
-                self.cartVM.showCart(kullanici_adi: user) { [weak self] cartList in
-                    self?.cartList = cartList
-                    
-                }
-            }
-            
-        self.tableView.reloadData()
+        super.viewWillAppear(animated)
+                loadCartData()
     }
 
     
+    func loadCartData() {
+        if let user = Auth.auth().currentUser?.email {
+            self.cartVM.showCart(kullanici_adi: user) { [weak self] cartList in
+                self?.cartList = cartList
+                self?.tableView.reloadData()
+            }
+        }
+    }
+    deinit {
+            NotificationCenter.default.removeObserver(self, name: .cartUpdated, object: nil)
+        }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if cartList.isEmpty == true {
@@ -115,32 +122,36 @@ class CartVC: UIViewController, UITableViewDelegate, UITableViewDataSource {
         let item = self.cartList[indexPath.row]
             let alert = UIAlertController(title: "Delete", message: "Do you want to delete the \(item.yemek_adi!)?", preferredStyle: .alert)
             
-            let iptalAction = UIAlertAction(title: "Cancel", style: .cancel)
-            alert.addAction(iptalAction)
+            let cancelAction = UIAlertAction(title: "Cancel", style: .cancel)
+            alert.addAction(cancelAction)
             
-            let evetAction = UIAlertAction(title: "Delete", style: .destructive){_ in
-                self.cartVM.removeFromCart(sepet_yemek_id: Int(item.sepet_yemek_id!)!, kullanici_adi: (Auth.auth().currentUser?.email)!)
-                
-                if let user = Auth.auth().currentUser?.email {
+            let yesAction = UIAlertAction(title: "Delete", style: .destructive){ [self]_ in
+                if let user = Auth.auth().currentUser?.email{
+                    self.cartVM.removeFromCart(sepet_yemek_id: Int(item.sepet_yemek_id!)!, kullanici_adi: user)
                     self.cartVM.showCart(kullanici_adi: user) { [weak self] cartList in
 
                         self?.cartList = cartList
-                        
-                    
-                        self?.tableView.reloadData()
-                    
+                        tableView.reloadData()
+                
                     }
                 }
+            
             }
-            alert.addAction(evetAction)
             
+            alert.addAction(yesAction)
             self.present(alert, animated: true)
-            
         }
         return UISwipeActionsConfiguration(actions: [deleteAction])
     }
     
 
+    
 
 
 }
+
+
+extension Notification.Name {
+    static let cartUpdated = Notification.Name("cartUpdated")
+}
+

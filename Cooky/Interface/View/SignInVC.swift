@@ -12,10 +12,9 @@ import FirebaseAuth
 class SignInVC: UIViewController {
     
 
+    var signInVM = SignInVM()
     
     @IBOutlet weak var titleLabel: UILabel!
-    
-    
     @IBOutlet weak var usernameTF: UITextField!
     @IBOutlet weak var passwordTF: UITextField!
     
@@ -33,22 +32,8 @@ class SignInVC: UIViewController {
     
     @IBAction func signInClicked(_ sender: Any) {
         
-        if usernameTF.text != "" || passwordTF.text != ""{
-            Auth.auth().signIn(withEmail: usernameTF.text!, password: passwordTF.text!) { (authdata, error) in
-                 if error != nil{
-                     self.alertFunc(alertTitle: "Error", alertMessage: error?.localizedDescription ?? "Error")
-                 }
-                 else{
-                     self.performSegue(withIdentifier: "toMainPageVC", sender: nil)
-                }
-             }
-        }
-        else{
-            alertFunc(alertTitle: "Sign In Error", alertMessage: "Please fill email and password")
-        }
-        
-        
 
+        signInVM.signInFunc(VC: self, userName: usernameTF, password: passwordTF)
     }
     
     
@@ -56,15 +41,6 @@ class SignInVC: UIViewController {
         
         performSegue(withIdentifier: "toSignUpVC", sender: nil)
     }
-    
-    
-    @objc func alertFunc(alertTitle: String, alertMessage: String){
-        let warning = UIAlertController(title: alertTitle, message: alertMessage, preferredStyle: UIAlertController.Style.alert)
-        let okButton = UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: nil)
-        warning.addAction(okButton)
-        self.present(warning, animated: true, completion: nil)
-    }
- 
     
     
 

@@ -29,9 +29,9 @@ class ProfileVC: UIViewController {
         navigationController?.navigationBar.standardAppearance = navigationBarAppearance
         navigationController?.navigationBar.compactAppearance = navigationBarAppearance
         
-        if let userName = Auth.auth().currentUser?.email{
-            userLabel.text = "User: \(userName)"
-        }
+      //  if let userName = Auth.auth().currentUser?.email{
+            userLabel.text = "User: user1@user.com"
+       // }
     }
     
     

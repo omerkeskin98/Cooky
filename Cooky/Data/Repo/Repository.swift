@@ -5,9 +5,9 @@
 //  Created by Omer Keskin on 23.05.2024.
 //
 
+import UIKit
 import Foundation
 import RxSwift
-import Kingfisher
 import Alamofire
 import Firebase
 import FirebaseFirestore
@@ -31,7 +31,7 @@ class Repository{
             if let data = response.data {
                 do {
                     let decodedResponse = try JSONDecoder().decode(CRUDResponse.self, from: data)
-                  //  print("Decoded response: \(decodedResponse)")
+                    print("Decoded response: \(decodedResponse)")
                     // Yanıtın başarı durumunu ve mesajını işleyin
                 } catch {
                     print("JSON decoding error: \(error)")
@@ -50,33 +50,6 @@ class Repository{
     }
 
     
-    
-   /*/ func addToCart(yemek_adi: String, yemek_resim_adi: String, yemek_fiyat: Int, yemek_siparis_adet: Int, kullanici_adi: String){
- 
-        let url = URL(string: "http://kasimadalan.pe.hu/yemekler/sepeteYemekEkle.php")!
-        let params : Parameters = [            "yemek_adi": yemek_adi,
-                                               "yemek_resim_adi": yemek_resim_adi,
-                                               "yemek_fiyat": yemek_fiyat,
-                                               "yemek_siparis_adet": yemek_siparis_adet,
-                                               "kullanici_adi": kullanici_adi]
-        AF.request(url, method: .post, parameters: params, encoding: URLEncoding.default).response { response in
-            if let data = response.data{
-                do{
-                    let response = try JSONDecoder().decode(CRUDResponse.self, from: data)
-
-                    print("basari: \(response.success!)")
-                    print("message: \(response.message!)")
-                    
-                }catch{
-                    print(error.localizedDescription)
-                }
-                
-            
-            }
-            
-        }
-    }
-    */
     
     func showCart(kullanici_adi: String, completion: @escaping ([SepetYemekler]) -> Void) {
         guard let url = URL(string: "http://kasimadalan.pe.hu/yemekler/sepettekiYemekleriGetir.php") else {
@@ -160,36 +133,26 @@ class Repository{
 
     }
     
-    func addToFavorites(){
-        
-        
-        
-    }
+
     
     
-    func getUserInfo(){
+    func getUserInfo(vc: UIViewController){
         
         firestoreDB.collection("UserInfo").whereField("email", isEqualTo: Auth.auth().currentUser!.email!).getDocuments { (snapshot, error) in
             if error != nil{
                 let warning = UIAlertController(title: "Error", message: error?.localizedDescription ?? "Error", preferredStyle: UIAlertController.Style.alert)
                 let okButton = UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: nil)
                 warning.addAction(okButton)
-                MainPage().present(warning, animated: true, completion: nil)
+                vc.present(warning, animated: true, completion: nil)
             }
             else{
                 if snapshot?.isEmpty == false && snapshot != nil{
                     for document in snapshot!.documents{
                         if document.get("email") is String{
                             UserSingleton.shareUserInfo.email = Auth.auth().currentUser!.email!
-   
-                            
-                            
                         }
-                        
                     }
-                    
                 }
-                
             }
         }
         

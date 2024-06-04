@@ -20,7 +20,7 @@ class DetailVM{
         itemList = repo.itemList
     }
     
-    
+
     func getItems(){
         repo.getItems()
     }

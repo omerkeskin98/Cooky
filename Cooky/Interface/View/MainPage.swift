@@ -15,12 +15,13 @@ import RxRelay
 
 class MainPage: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     
-    let firestoreDB = Firestore.firestore()
+    let firestore = Firestore.firestore()
     var foodList = [Yemekler]()
     var mainPageVM = MainPageVM()
     let disposeBag = DisposeBag()
     var counters: [Counter] = []
     let cartVC = CartVC()
+    let cartVM = CartVM()
     
     @IBOutlet weak var collectionView: UICollectionView!
     
@@ -28,9 +29,6 @@ class MainPage: UIViewController, UICollectionViewDelegate, UICollectionViewData
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        
-        self.mainPageVM.getItems()
-        
         
         // navigation bar attributes
         self.navigationItem.title = "Cooky"
@@ -57,8 +55,6 @@ class MainPage: UIViewController, UICollectionViewDelegate, UICollectionViewData
         collectionView.collectionViewLayout = design
         
         
-       
-
         
        _ = mainPageVM.itemList.subscribe(onNext: {list in
             self.foodList = list
@@ -71,20 +67,26 @@ class MainPage: UIViewController, UICollectionViewDelegate, UICollectionViewData
                }
                return counter
            }
+           
             
             DispatchQueue.main.async{
                 self.collectionView.reloadData()
+
             }
            
         })
         
+        mainPageVM.getUserInfo(vc: self) // firebase user
+        self.mainPageVM.getItems()
         
-
-        
-        mainPageVM.firestoreUserInfo() // firebase user subscription
-
-      
+        if let user = Auth.auth().currentUser?.email {
+            cartVM.showCart(kullanici_adi: user) { [weak self] cartList in
+                self!.cartVC.cartList = cartList
+            }
+            
     }
+      
+}
     
 
     
@@ -130,6 +132,7 @@ class MainPage: UIViewController, UICollectionViewDelegate, UICollectionViewData
                 }else if let destinationVC = segue.destination as? DetailVC{
                     destinationVC.foodList = selectedItem
                     destinationVC.counter = selectedCounter
+                    
                 }
                 
             }
