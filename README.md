@@ -69,11 +69,11 @@ Cooky is a simple and intuitive food ordering app built with Swift. Users can re
 
 ## Screenshots
 
-![Login Screen] <img width="493" alt="login" src="https://github.com/omerkeskin98/Cooky/assets/145980440/e381b8b5-a05c-4fd3-b090-6d69cf84ab3b">
-![Sign Up Screen]<img width="493" alt="signup" src="https://github.com/omerkeskin98/Cooky/assets/145980440/25ec875e-6162-4fa1-becf-0f4acdb4cc0f">
-![Product List]<img width="493" alt="product_list" src="https://github.com/omerkeskin98/Cooky/assets/145980440/3b80f92f-d487-4a4b-a4f8-4d1b6c04a9e3">
-![Product Details]<img width="493" alt="product_details" src="https://github.com/omerkeskin98/Cooky/assets/145980440/010ed4da-2d94-48a4-954d-3f4b9702f4c5">
-![Cart]<img width="493" alt="cart" src="https://github.com/omerkeskin98/Cooky/assets/145980440/5a03860d-3277-4c7e-9ad2-ad78e8a2fef7">
+<img width="493" alt="login" src="https://github.com/omerkeskin98/Cooky/assets/145980440/e381b8b5-a05c-4fd3-b090-6d69cf84ab3b">
+<img width="493" alt="signup" src="https://github.com/omerkeskin98/Cooky/assets/145980440/25ec875e-6162-4fa1-becf-0f4acdb4cc0f">
+<img width="493" alt="product_list" src="https://github.com/omerkeskin98/Cooky/assets/145980440/3b80f92f-d487-4a4b-a4f8-4d1b6c04a9e3">
+<img width="493" alt="product_details" src="https://github.com/omerkeskin98/Cooky/assets/145980440/010ed4da-2d94-48a4-954d-3f4b9702f4c5">
+<img width="493" alt="cart" src="https://github.com/omerkeskin98/Cooky/assets/145980440/5a03860d-3277-4c7e-9ad2-ad78e8a2fef7">
 
 
 ## Acknowledgements
